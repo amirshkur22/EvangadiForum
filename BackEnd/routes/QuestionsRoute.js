@@ -1,17 +1,16 @@
 import { Router } from "express";
 const router = Router();
-//register route
-router.get("/ask", (req, res) => {
+router.get("/all-questions",(req, res) => {
   res.end("you can ask questions");
 });
 
 //login user
-router.post("/post", (req, res) => {
+router.post("/post-questions", (req, res) => {
   res.end("you can answer/post questions");
 });
 
 //check user
-router.get("/checkQuesions", (req, res) => {
+router.get("/check-questions", (req, res) => {
   res.end("you can check questions");
 });
 

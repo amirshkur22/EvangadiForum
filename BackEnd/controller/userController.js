@@ -3,8 +3,10 @@ import dbCon from "../db/DbConfig.js";
 import CryptoJS from "crypto-js";
 import { StatusCodes } from "http-status-codes";
 import dotenv from "dotenv";
+import jwt from 'jsonwebtoken'
 dotenv.config();
 const VITE_ENCRIPT_DECRIPT_KEY = process.env.VITE_ENCRIPT_DECRIPT_KEY;
+const VITE_SECRETE_KEY=process.env.VITE_SECRETE_KEY
 const register = async (req, res) => {
   const { userName, firstName, lastName, email, password } = req.body;
   if (!userName || !firstName || !lastName || !email || !password) {
@@ -76,7 +78,12 @@ const login = async (req, res) => {
         .status(StatusCodes.BAD_REQUEST)
         .json({ message: "password does not  match" });
     }
-    return res.status(StatusCodes.CREATED).json({ user: user });
+    const { user_name, user_id } = user[0]
+    // console.log(user_name,user_id)
+    const token=jwt.sign({ user_name, user_id }, VITE_SECRETE_KEY, { expiresIn: '1d' })
+    return res
+      .status(StatusCodes.OK)
+      .json({ message:'user registerd succsessfully', token });
   } catch (error) {
     return res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
@@ -85,6 +92,7 @@ const login = async (req, res) => {
 };
 
 const checkUser = async (req, res) => {
-  res.end("user checked");
+  const { user_id, user_name }=req.user
+  res.status(StatusCodes.OK).json({message:'valid user',user_id,user_name})
 };
 export { register, login, checkUser };
