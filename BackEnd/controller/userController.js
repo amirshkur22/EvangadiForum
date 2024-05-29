@@ -2,9 +2,9 @@ import dbCon from "../db/DbConfig.js";
 // import bcrypt from "bcrypt";
 import CryptoJS from "crypto-js";
 import { StatusCodes } from "http-status-codes";
-import dotenv from 'dotenv'
-dotenv.config()
-const VITE_SECRETE_KEY=process.env.VITE_SECRETE_KEY
+import dotenv from "dotenv";
+dotenv.config();
+const VITE_ENCRIPT_DECRIPT_KEY = process.env.VITE_ENCRIPT_DECRIPT_KEY;
 const register = async (req, res) => {
   const { userName, firstName, lastName, email, password } = req.body;
   if (!userName || !firstName || !lastName || !email || !password) {
@@ -27,8 +27,11 @@ const register = async (req, res) => {
         .status(StatusCodes.BAD_REQUEST)
         .json({ message: "password  must be at least 8 charcters" });
     }
-// Encrypt the password
-const encryptedPassword = CryptoJS.AES.encrypt(password, VITE_SECRETE_KEY).toString();
+    // Encrypt the password
+    const encryptedPassword = CryptoJS.AES.encrypt(
+      password,
+      VITE_ENCRIPT_DECRIPT_KEY
+    ).toString();
     await dbCon.query(
       `INSERT INTO users(user_name,first_name,last_name,email,password )VALUES(?,?,?,?,?)`,
       [userName, firstName, lastName, email, encryptedPassword]
@@ -62,7 +65,10 @@ const login = async (req, res) => {
     }
     // Decrypt the password we get from database
     // console.log(user[0].password)
-    const bytes = CryptoJS.AES.decrypt(user[0].password, VITE_SECRETE_KEY);
+    const bytes = CryptoJS.AES.decrypt(
+      user[0].password,
+      VITE_ENCRIPT_DECRIPT_KEY
+    );
     const decryptedPassword = bytes.toString(CryptoJS.enc.Utf8);
     // console.log(decryptedPassword)
     if (password !== decryptedPassword) {
