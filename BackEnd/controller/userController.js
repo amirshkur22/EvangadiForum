@@ -1,6 +1,10 @@
 import dbCon from "../db/DbConfig.js";
-import bcrypt from "bcrypt";
+// import bcrypt from "bcrypt";
+import CryptoJS from "crypto-js";
 import { StatusCodes } from "http-status-codes";
+import dotenv from 'dotenv'
+dotenv.config()
+const VITE_SECRETE_KEY=process.env.VITE_SECRETE_KEY
 const register = async (req, res) => {
   const { userName, firstName, lastName, email, password } = req.body;
   if (!userName || !firstName || !lastName || !email || !password) {
@@ -13,7 +17,6 @@ const register = async (req, res) => {
       `SELECT user_id,user_name FROM users WHERE user_name=? OR email=?`,
       [userName, email]
     );
-    // console.log(user);
     if (user.length > 0) {
       return res
         .status(StatusCodes.BAD_REQUEST)
@@ -24,14 +27,11 @@ const register = async (req, res) => {
         .status(StatusCodes.BAD_REQUEST)
         .json({ message: "password  must be at least 8 charcters" });
     }
-    //password encription
-    const salt = await bcrypt.genSalt(10);
-    // console.log(salt)
-    const hashedPassword = await bcrypt.hash(password, salt);
-    // console.log(hashedPassword)
+// Encrypt the password
+const encryptedPassword = CryptoJS.AES.encrypt(password, VITE_SECRETE_KEY).toString();
     await dbCon.query(
       `INSERT INTO users(user_name,first_name,last_name,email,password )VALUES(?,?,?,?,?)`,
-      [userName, firstName, lastName, email, hashedPassword]
+      [userName, firstName, lastName, email, encryptedPassword]
     );
     return res
       .status(StatusCodes.CREATED)
@@ -44,8 +44,40 @@ const register = async (req, res) => {
   }
 };
 const login = async (req, res) => {
-  res.end("user loged in");
+  const { email, password } = req.body;
+  if (!email || !password) {
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ message: "please provide all required information " });
+  }
+  try {
+    const [user] = await dbCon.query(
+      `SELECT user_id, user_name, password FROM users WHERE email=?`,
+      [email]
+    );
+    if (user.length === 0) {
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ message: "invalid credential" });
+    }
+    // Decrypt the password we get from database
+    // console.log(user[0].password)
+    const bytes = CryptoJS.AES.decrypt(user[0].password, VITE_SECRETE_KEY);
+    const decryptedPassword = bytes.toString(CryptoJS.enc.Utf8);
+    // console.log(decryptedPassword)
+    if (password !== decryptedPassword) {
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ message: "password does not  match" });
+    }
+    return res.status(StatusCodes.CREATED).json({ user: user });
+  } catch (error) {
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ message: `${error.message}` });
+  }
 };
+
 const checkUser = async (req, res) => {
   res.end("user checked");
 };
