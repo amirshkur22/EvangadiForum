@@ -66,20 +66,17 @@ const login = async (req, res) => {
         .json({ message: "invalid credential" });
     }
     // Decrypt the password we get from database
-    // console.log(user[0].password)
     const bytes = CryptoJS.AES.decrypt(
       user[0].password,
       VITE_ENCRIPT_DECRIPT_KEY
     );
     const decryptedPassword = bytes.toString(CryptoJS.enc.Utf8);
-    // console.log(decryptedPassword)
     if (password !== decryptedPassword) {
       return res
         .status(StatusCodes.BAD_REQUEST)
         .json({ message: "password does not  match" });
     }
     const { user_name, user_id } = user[0]
-    // console.log(user_name,user_id)
     const token=jwt.sign({ user_name, user_id }, VITE_SECRETE_KEY, { expiresIn: '1d' })
     return res
       .status(StatusCodes.OK)

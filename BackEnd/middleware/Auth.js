@@ -13,7 +13,7 @@ const auth = async (req, res, next) => {
       .json({ error: "No token provided" });
     }
     const token = authHeader.split(' ')[1]
-    console.log(token)
+    // console.log(token)
   try {
       const payloadData = jwt.verify(token, VITE_SECRETE_KEY);
       const { user_id, user_name } = payloadData
