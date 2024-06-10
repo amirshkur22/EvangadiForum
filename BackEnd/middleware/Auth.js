@@ -10,7 +10,7 @@ const auth = async (req, res, next) => {
   if (!authHeader||!authHeader.startsWith('Bearer')) {
     return res
       .status(StatusCodes.UNAUTHORIZED)
-      .json({ error: "No token provided" });
+      .json({ error: "authentication invalid" });
     }
     const token = authHeader.split(' ')[1]
     // console.log(token)

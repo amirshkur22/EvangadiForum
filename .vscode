@@ -1,0 +1,12 @@
+{
+  "consoleNinja.autoStart": true,
+  "consoleNinja.files": [
+    "BackEnd/**/*.js",
+    "FrontEnd/src/**/*.js",
+    "FrontEnd/src/**/*.jsx"
+  ],
+  "consoleNinja.filters": {
+    "include": ["**/*.js"],
+    "exclude": ["node_modules/**"]
+  }
+}

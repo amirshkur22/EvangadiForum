@@ -3,22 +3,24 @@ import dbCon from "../db/DbConfig.js";
 import CryptoJS from "crypto-js";
 import { StatusCodes } from "http-status-codes";
 import dotenv from "dotenv";
-import jwt from 'jsonwebtoken'
+import jwt from "jsonwebtoken";
 dotenv.config();
 const VITE_ENCRIPT_DECRIPT_KEY = process.env.VITE_ENCRIPT_DECRIPT_KEY;
-const VITE_SECRETE_KEY=process.env.VITE_SECRETE_KEY
+const VITE_SECRETE_KEY = process.env.VITE_SECRETE_KEY;
 const register = async (req, res) => {
   const { userName, firstName, lastName, email, password } = req.body;
+  console.log(userName, firstName, lastName, email, password);
   if (!userName || !firstName || !lastName || !email || !password) {
     return res
       .status(StatusCodes.BAD_REQUEST)
-      .json({ message: "please provide all required information" });
+      .json({ message: "please provide all required information!!" });
   }
   try {
     const [user] = await dbCon.query(
       `SELECT user_id,user_name FROM users WHERE user_name=? OR email=?`,
       [userName, email]
     );
+    console.log(user);
     if (user.length > 0) {
       return res
         .status(StatusCodes.BAD_REQUEST)
@@ -76,11 +78,13 @@ const login = async (req, res) => {
         .status(StatusCodes.BAD_REQUEST)
         .json({ message: "password does not  match" });
     }
-    const { user_name, user_id } = user[0]
-    const token=jwt.sign({ user_name, user_id }, VITE_SECRETE_KEY, { expiresIn: '1d' })
+    const { user_name, user_id } = user[0];
+    const token = jwt.sign({ user_name, user_id }, VITE_SECRETE_KEY, {
+      expiresIn: "1y",
+    });
     return res
       .status(StatusCodes.OK)
-      .json({ message:'user registerd succsessfully', token });
+      .json({ message: "user loged In sucessfully!!", token, user_name });
   } catch (error) {
     return res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
@@ -89,7 +93,9 @@ const login = async (req, res) => {
 };
 
 const checkUser = async (req, res) => {
-  const { user_id, user_name }=req.user
-  res.status(StatusCodes.OK).json({message:'valid user',user_id,user_name})
+  const { user_id, user_name } = req.user;
+  res
+    .status(StatusCodes.OK)
+    .json({ message: "valid user", user_id, user_name });
 };
 export { register, login, checkUser };

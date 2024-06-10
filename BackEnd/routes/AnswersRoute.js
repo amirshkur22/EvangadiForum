@@ -1,18 +1,10 @@
 import { Router } from "express";
+import  { postAnswer, getQuestionDetailsAndAnswers,  } from "../controller/answerController.js";
+
 const router = Router();
-//register route
-router.get("/ask", (req, res) => {
-  res.end("you can ask questions");
-});
+router.post('/answer', postAnswer);
+// New route for getting question details
+router.get("/question'sAnswer/:question_id", getQuestionDetailsAndAnswers);
 
-//login user
-router.post("/answer", (req, res) => {
-  res.end("you can answer/post questions");
-});
-
-//check user
-router.get("/checkQuesions", (req, res) => {
-  res.end("you can check questions");
-});
 
 export default router;

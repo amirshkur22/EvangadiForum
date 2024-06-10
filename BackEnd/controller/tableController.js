@@ -16,7 +16,7 @@ const createTables = async (req, res) => {
       question_id VARCHAR(100) NOT NULL UNIQUE,
       user_id INT(20) NOT NULL,
       title VARCHAR(50) NOT NULL,
-      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      asked_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       description TEXT NOT NULL,
       tag VARCHAR(20),
       PRIMARY KEY(id, question_id),
@@ -28,7 +28,7 @@ const createTables = async (req, res) => {
       user_id INT(20) NOT NULL,
       question_id VARCHAR(100) NOT NULL,
       answer_text TEXT NOT NULL,
-      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      posted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       FOREIGN KEY (question_id) REFERENCES questions(question_id),
       FOREIGN KEY (user_id) REFERENCES users(user_id)
     )`;
@@ -48,3 +48,4 @@ const createTables = async (req, res) => {
 };
 
 export { createTables };
+//ALTER TABLE answers CHANGE COLUMN created_at posted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
