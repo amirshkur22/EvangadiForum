@@ -17,7 +17,7 @@ const useCountUp = (endValue, duration) => {
         }, 50);
 
         return () => clearInterval(timer);
-    }, [endValue, duration]);
+    }, []);
 
     return count;
 };

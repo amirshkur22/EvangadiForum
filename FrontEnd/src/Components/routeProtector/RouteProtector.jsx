@@ -8,14 +8,14 @@ const RouteProtector = ({ children, msg, redirect }) => {
 
   useEffect(() => {
     if (user === undefined) {
-      return; // User state is still being set, so wait.
+      return; 
     }
     if (user === null) {
       navigate("/login", { state: { msg, redirect } });
     }
   }, [user, navigate, msg, redirect]);
 
-  return user !== undefined ? children : null; // Wait until user state is determined.
+  return user !== undefined ? children : null; 
 };
 
 export default RouteProtector;
