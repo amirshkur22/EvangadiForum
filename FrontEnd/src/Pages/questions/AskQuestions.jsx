@@ -36,6 +36,7 @@ const AskQuestions = () => {
           },
         }
       );
+      // http://localhost:2024/api/questions/askQuestion
       navigate("/questionsList");
     } catch (error) {
       console.error(

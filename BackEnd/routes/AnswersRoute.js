@@ -3,7 +3,6 @@ import  { postAnswer, getQuestionDetailsAndAnswers,  } from "../controller/answe
 
 const router = Router();
 router.post('/answer', postAnswer);
-// New route for getting question details
 router.get("/question'sAnswer/:question_id", getQuestionDetailsAndAnswers);
 
 

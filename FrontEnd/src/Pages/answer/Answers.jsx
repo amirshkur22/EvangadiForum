@@ -29,6 +29,7 @@ const Answers = () => {
             },
           }
         );
+         //http://localhost:2024/api/answers//question'sAnswer/:question_id
         const { title, description, askedBy } = data[0];
         setQuestion({ title, description, askedBy });
         setquestionWithAnswer(data);
@@ -68,6 +69,7 @@ const Answers = () => {
           },
         }
       );
+      //http://localhost:2024/api/answers/answer
       const newAnswer = {
         ...data.answer,
         answeredBy: user.user_name, 
@@ -112,7 +114,7 @@ const Answers = () => {
               <div key={index} className="p-3">
                 <div className="d-flex align-items-center">
                   <div className="d-flex flex-column align-items-center">
-                   {answer.answer_text&& <FaUserGraduate size={100} color="#000" />}
+                   {answer.answer_text&& <FaUserGraduate size={70} color="#000" />}
                     <p className="text-primary">{answer?.answeredBy}</p>
                   </div>
                   <p>{answer?.answer_text}</p>

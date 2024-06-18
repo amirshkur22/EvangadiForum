@@ -32,7 +32,7 @@ const postAnswer = async (req, res) => {
 // Function to get question details and answers
 const getQuestionDetailsAndAnswers = async (req, res) => {
   const { question_id } = req.params;
-console.log(req)
+// console.log(req)
   if (!question_id) {
     return res
       .status(StatusCodes.BAD_REQUEST)
@@ -62,7 +62,7 @@ console.log(req)
       `;
 
     const [results] = await DbConfig.query(query, [question_id]);
-console.log(results)
+// console.log(results)
     if (results.length === 0) {
       return res
         .status(StatusCodes.NOT_FOUND)

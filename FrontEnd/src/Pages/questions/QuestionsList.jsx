@@ -20,6 +20,7 @@ const QuestionsList = () => {
             Authorization: `Bearer ${token}`,
           },
         });
+        //http://localhost:2024/api/questions/questionsList
         setQuestions(data);
       } catch (error) {
         setError(error.response?.data?.error);

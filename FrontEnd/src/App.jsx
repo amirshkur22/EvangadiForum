@@ -15,7 +15,7 @@ import Answers from "./Pages/answer/Answers";
 export const dataContext = createContext();
 
 function App() {
-  const [user, setUser] = useState(undefined); // Initialize user as undefined
+  const [user, setUser] = useState(undefined); 
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
 
